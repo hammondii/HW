@@ -90,16 +90,20 @@ void __ISR(_I2C_1_VECTOR, IPL1SOFT) I2C1SlaveInterrupt(void) {
 }
 
 void i2c_master_setup() {
-  int ie = __builtin_disable_interrupts();
-  I2C1BRG = 90;                       // I2CBRG = [1/(2*Fsck) - PGD]*Pblck - 2
-                                      // Fsck is the frequency (usually 100khz or 400 khz), PGD = 104ns
-                                      // this is 400 khz mode
-                                      // enable the i2c interrupts
-  IPC8bits.I2C1IP  = 1;            // master has interrupt priority 1
-  IEC1bits.I2C1MIE = 1;            // master interrupt is enabled
-  IFS1bits.I2C1MIF = 0;            // clear the interrupt flag
-  I2C1CONbits.ON = 1;                 // turn on the I2C2 module
-  
+    int ie = __builtin_disable_interrupts();
+    I2C1BRG = 90;                       // I2CBRG = [1/(2*Fsck) - PGD]*Pblck - 2
+                                  // Fsck is the frequency (usually 100khz or 400 khz), PGD = 104ns
+                                  // this is 400 khz mode
+                                  // enable the i2c interrupts
+    IPC8bits.I2C1IP  = 1;            // master has interrupt priority 1
+    IEC1bits.I2C1MIE = 1;            // master interrupt is enabled
+    IFS1bits.I2C1MIF = 0;            // clear the interrupt flag
+    I2C1CONbits.ON = 1;                 // turn on the I2C2 module
+
+    // set up Pin21 (B10) as Digital Output
+
+    TRISBbits.TRISB10 = 0; // set pin B15 to Digital Input User Button
+
   if(ie & 1) {
     __builtin_enable_interrupts();
   }
