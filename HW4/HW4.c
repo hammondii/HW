@@ -261,7 +261,37 @@ int main(void) {
 
         display_init();
         int row, col;
-//        display_pixel_set(0,0,1);
+        int a=1337;       
+        char buffer [10];
+        sprintf(buffer,"Hello %d!",a);
+ 
+        int temp;
+        int i =0, j=0, k=0;
+        int val;
+        int rowstart=28;
+        int colstart=32;
+        while(buffer[k]){
+            for(k=0;k<strlen(buffer);k++){
+                val=buffer[k];
+                for(col=0;col<5;col++){
+                    for(row=0;row<8;row++){
+                        temp=ASCII[val-0x20][i];
+                        //
+                        temp>>=j;
+                        display_pixel_set(row+rowstart,col+colstart,temp&1);
+                        j++;
+                    }
+
+                    i++;
+                    j=0;
+                }
+                //rowstart+=8;
+                i=0;
+                colstart+=5;
+            }
+            display_draw();
+        }
+        //        display_pixel_set(0,0,1);
 //        display_pixel_set(0,127,1);
 //        display_pixel_set(63,127,1);
 //        display_pixel_set(63,0,1);
@@ -277,25 +307,6 @@ int main(void) {
 //            }
 //            col=30;
 //        }
-
-
- 
-        int temp;
-        int i =0, j=0, k=7;
-        int val= 0x48;
-        for(col=15;col<20;col++){
-            for(row=30;row<38;row++){
-                temp=ASCII[val-0x20][i];
-                //
-                temp>>=j;
-                display_pixel_set(row,col,temp&1);
-                j++;
-                display_draw();
-            }
-            i++;
-            j=0;
-        }
-
         //for(col = 0; col < WIDTH; ++col) { // draw a diagonal line
         //row = 2*col % HEIGHT; // when we hit the last row
         //display_pixel_set(row,col,1); // start from row 0, but keep advancing
