@@ -12,7 +12,7 @@
 #include "i2c_display.h"
 #include "i2c_master_int.h"
 #include "accel.h"
-#include "OLED.h"
+
 
 // DEVCFGs here
 
@@ -54,7 +54,7 @@
     #pragma config FVBUSONIO = ON // controlled by USB module
 
 // lookup table for all of the ascii characters
-/**static const char ASCII[96][5] = {
+static const char ASCII[96][5] = {
  {0x00, 0x00, 0x00, 0x00, 0x00} // 20  (space)
 ,{0x00, 0x00, 0x5f, 0x00, 0x00} // 21 !
 ,{0x00, 0x07, 0x00, 0x07, 0x00} // 22 "
@@ -151,7 +151,7 @@
 ,{0x00, 0x41, 0x36, 0x08, 0x00} // 7d }
 ,{0x10, 0x08, 0x08, 0x10, 0x08} // 7e ?
 ,{0x00, 0x06, 0x09, 0x09, 0x06} // 7f ?
-}; // end char ASCII[96][5]*/
+}; // end char ASCII[96][5]
 
 //	Function Prototypes
 int main(void);
@@ -200,18 +200,18 @@ int main(void) {
        //Temporary Location for variables/functions until modular functions
 
         //Temporary Variables for OLED_Write();
-//        int row, col;
-//        int a=1337;
-          char buffer [100];
-//        int tempb;
-//        int i =0, j=0, k=0;
-//        int val;
+       int row, col;
+        int a=1337;
+        char buffer [100];
+        int tempb;
+        int i =0, j=0, k=0;
+        int val;
 
        //Temporary Variables for Reading ACCEL
         short accels[3]; // accelerations for the 3 axes
         short mags[3]; // magnetometer readings for the 3 axes
         short tempt;  // temperature
-        //int load;  // not in use right now
+        int load;
 
         //for(load=0;load<10;load++){
 
@@ -225,14 +225,13 @@ int main(void) {
 
         acc_read_register(TEMP_OUT_L, (unsigned char *) &tempt, 2);
 
-        sprintf(buffer,"Values (X:%d, Y:%d, Z:%d",accels[0],accels[1],accels[2]);
-        //OLED_POS_START(0, 0);
+        sprintf(buffer,"Values (A:%d, M:%d, T:%d",accels[0],accels[1],accels[2]);
+        OLED_POS_START(0, 0);
         display_clear();
-        OLED_WRITE(24,64, buffer);
 
         //This while loop Writes to the Screen.  Current issue with writing
         //making into a seperate function.  Something about pointer.
- /*       while(buffer[k]){
+        while(buffer[k]){
             //for(k=0;k<strlen(buffer);k++){
                 val=buffer[k];
                 for(col=0;col<5;col++){
@@ -253,7 +252,7 @@ int main(void) {
         }
 		display_draw();
         //}
-*/
+
 
         testlight();
        // display_draw();
@@ -261,9 +260,9 @@ int main(void) {
 }
 
 
-//void OLED_POS_START(int row1, int col1){
-//
-//    row1 = rowstart;
-//    col1 = colstart;
-//
-//}
+void OLED_POS_START(int row1, int col1){
+
+    row1 = rowstart;
+    col1 = colstart;
+
+}

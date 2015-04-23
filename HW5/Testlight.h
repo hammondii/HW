@@ -17,7 +17,7 @@ int readADC(void);
 
 void testlight(void);
 
-void light_int();
+void light_init(void);
 
 #ifdef	__cplusplus
 }

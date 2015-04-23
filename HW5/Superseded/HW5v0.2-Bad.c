@@ -1,8 +1,8 @@
 /*
- * File:   HW4.c
+ * File:   HW5.c
  * Author: Paul
  *
- * Created on April 12, 2015, 5:37 PM
+ * Created on April 19, 2015, 8:54 PM
  */
 
 #include <p32xxxx.h>
@@ -11,8 +11,8 @@
 #include "Testlight.h" // Testlight File from HW1
 #include "i2c_display.h"
 #include "i2c_master_int.h"
+//#include "OLED.h"
 #include "accel.h"
-#include "OLED.h"
 
 // DEVCFGs here
 
@@ -54,7 +54,7 @@
     #pragma config FVBUSONIO = ON // controlled by USB module
 
 // lookup table for all of the ascii characters
-/**static const char ASCII[96][5] = {
+static const char ASCII[96][5] = {
  {0x00, 0x00, 0x00, 0x00, 0x00} // 20  (space)
 ,{0x00, 0x00, 0x5f, 0x00, 0x00} // 21 !
 ,{0x00, 0x07, 0x00, 0x07, 0x00} // 22 "
@@ -151,26 +151,24 @@
 ,{0x00, 0x41, 0x36, 0x08, 0x00} // 7d }
 ,{0x10, 0x08, 0x08, 0x10, 0x08} // 7e ?
 ,{0x00, 0x06, 0x09, 0x09, 0x06} // 7f ?
-}; // end char ASCII[96][5]*/
+}; // end char ASCII[96][5]
+//volatile unsigned int rowstart=0;
+//volatile unsigned int colstart=0;
+
 
 //	Function Prototypes
+//void OLED_POS_START(int rowstart, int colstart);
 int main(void);
-int readADC(void);
-volatile unsigned int rowstart=0;
-volatile unsigned int colstart=0;
-
-
-//	Function Prototypes
-void OLED_POS_START(int rowstart, int colstart);
 
 int main(void) {
 
     // startup
-
+    display_init();
+    //light_init();
+    acc_setup();
     //Startup code to run as fast as possible and get pins back from bad defaults
 
     __builtin_disable_interrupts();
-    
 
     // set the CP0 CONFIG register to indicate that
     // kseg0 is cacheable (0x3) or uncacheable (0x2)
@@ -191,29 +189,65 @@ int main(void) {
 
     __builtin_enable_interrupts();
 
-    light_init();
-    display_init();	
-    acc_setup();
+// INT step 3: This section sets up the timer.  Timer 2 will be enabled at the end.
+    TMR2 = 0;					// Initial value for Timer 2 = 0
+    PR2 = 39999;				// Set the Period Register
+    T2CONbits.TGATE = 0;		// Turns off gated accumulation
+    T2CONbits.TCKPS = 000;	// Sets the prescaler to 1
+    T2CONbits.T32 = 0;		// Disable 32 bit timer
+    T2CONbits.TCS = 0;		// Use PBCLK as clock
+
+    // INT step 3: This section sets up the PWM using OC1.  OC1 to be enabled at the end
+    OC1CONbits.OC32 = 0;		// Disable 32 bit Timer use for OC1
+    OC1CONbits.OCTSEL = 0; 	// Set Timer 2 as Clock source for Output Compare
+    OC1CONbits.OCM = 0b110;	// Disable Fault pin
+    OC1RS = 20000;		// Set next duty cycle to 50% (OC1R/PR2)
+    OC1R = 20000;		// Set the initial duty cycle to 50% (OC1R/PR2)
+
+// INT step 3: This section Enables Timer 3 and OC1
+    T2CONbits.ON = 1; 	 // Enable Timer 2
+    OC1CONbits.ON = 1;	 // Enable Output Compare 1
+
+// set up USER pin as input
+
+//For an input function, use the (function name)Rbits.(function name) to set the pin, using table 12-1 in Chapter 12
+    ANSELBbits.ANSB13 =0;
+    TRISBbits.TRISB13 = 0b0001; // set pin B15 to Digital Input User Button
+
+// set up LED1 pin as a digital output
+    LATBbits.LATB7= 1;
+    TRISBbits.TRISB7 = 0b0000; // set pin B7 to Digital Input
+
+// set up LED2 as OC1 using Timer1 at 1kHz
+
+//For an output function, use the RP(pin name)Rbits.RP(pin name)R to set the pin, using table 12-2 in Chapter 12
+    ANSELBbits.ANSB15 = 0;
+    RPB15Rbits.RPB15R = 0b0101; // set pin B15 to Digital Output
+
+// set up A0 as AN0
+    ANSELAbits.ANSA0 = 1;
+    AD1CON3bits.ADCS = 3;
+    AD1CHSbits.CH0SA = 0;
+    AD1CON1bits.ADON = 1;
 
     while(1){
-
-       //Temporary Location for variables/functions until modular functions
+        //Temporary Location for variables/functions until modular functions
 
         //Temporary Variables for OLED_Write();
-//        int row, col;
-//        int a=1337;
-          char buffer [100];
-//        int tempb;
-//        int i =0, j=0, k=0;
-//        int val;
+       /* int row, col;
+        int a=1337;
+        unsigned char buffer [100];
+        int tempb;
+        int i =0, j=0, k=0;
+        int val;
 
        //Temporary Variables for Reading ACCEL
         short accels[3]; // accelerations for the 3 axes
         short mags[3]; // magnetometer readings for the 3 axes
         short tempt;  // temperature
-        //int load;  // not in use right now
+        int load;
 
-        //for(load=0;load<10;load++){
+        for(load=0;load<40000;load++){
 
         acc_read_register(OUT_X_L_A, (unsigned char *) accels, 6);
 
@@ -225,15 +259,13 @@ int main(void) {
 
         acc_read_register(TEMP_OUT_L, (unsigned char *) &tempt, 2);
 
-        sprintf(buffer,"Values (X:%d, Y:%d, Z:%d",accels[0],accels[1],accels[2]);
-        //OLED_POS_START(0, 0);
-        display_clear();
-        OLED_WRITE(24,64, buffer);
+        sprintf(buffer,"Values (A:%d, M:%d, T:%d",accels[0],mags[0],tempt);
+        OLED_POS_START(0, 0);
 
         //This while loop Writes to the Screen.  Current issue with writing
         //making into a seperate function.  Something about pointer.
- /*       while(buffer[k]){
-            //for(k=0;k<strlen(buffer);k++){
+        while(buffer[k]){
+            for(k=0;k<strlen(buffer);k++){
                 val=buffer[k];
                 for(col=0;col<5;col++){
                     for(row=0;row<8;row++){
@@ -249,18 +281,52 @@ int main(void) {
                 }
                 i=0;
                 colstart+=5;
-            //}
+            }
+            display_draw();
         }
-		display_draw();
-        //}
-*/
+        }*/
 
+
+        // read the accelerometer from all three axes
+
+        // the accelerometer and the pic32 are both little endian by default (the lowest address has the LSB)
+
+        // the accelerations are 16-bit twos compliment numbers, the same as a short
+
+
+
+
+
+/*
+//        sprintf(buffer,"Hello %d!",a);
+//        OLED_POS_START(0, 40);
+//
+//        //This while loop Writes to the Screen.  Current issue with writing
+//        //making into a seperate function.  Something about pointer.
+//        while(buffer[k]){
+//            for(k=0;k<strlen(buffer);k++){
+//                val=buffer[k];
+//                for(col=0;col<5;col++){
+//                    for(row=0;row<8;row++){
+//                        tempb=ASCII[val-0x20][i];
+//                        //
+//                        tempb>>=j;
+//                        display_pixel_set(row+rowstart,col+colstart,tempb&1);
+//                        j++;
+//                    }
+//
+//                    i++;
+//                    j=0;
+//                }
+//                i=0;
+//                colstart+=5;
+//            }
+//            display_draw();
+//        }*/
         testlight();
-       // display_draw();
     }
 }
-
-
+//
 //void OLED_POS_START(int row1, int col1){
 //
 //    row1 = rowstart;

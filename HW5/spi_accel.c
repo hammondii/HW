@@ -3,8 +3,8 @@
 
 // interface with the LSM303D accelerometer/magnetometer using spi
 // Wire GND to GND, VDD to 3.3V, 
-// SDO1 (A1)            -> SDI (labeled SDA),
-// SDI1 (B2)            -> SDO
+// SDO1 (A4)            -> SDI (labeled SDA),
+// SDI1 (A1)            -> SDO
 // SCK1 (B14)           -> SCL
 // some digital pin(B4) -> CS
 
@@ -51,11 +51,13 @@ void acc_setup() {
 
   // select a pin for SDI1
   SDI1Rbits.SDI1R = 0b0;
-  ANSELBbits.ANSB2 = 0;
-
+  ANSELAbits.ANSA1 = 0b0;
+  
   // select a pin for SD01
-  RPB2Rbits.RPB2R = 0b0100;
+  RPA4Rbits.RPA4R = 0b0011;
 
+  //Turn off
+  
   // Setup the master Master - SPI1
   // we manually control SS as a digital output 
   // since the pic is just starting, we know that spi is off. We rely on defaults here
@@ -72,7 +74,7 @@ void acc_setup() {
  
   // set the accelerometer data rate to 1600 Hz. Do not update until we read values
   acc_write_register(CTRL1, 0xAF);
-  acc_write_register(CTRL1, 0);
+  acc_write_register(CTRL2, 0x00);
 
   // 50 Hz magnetometer, high resolution, temperature sensor on
   acc_write_register(CTRL5, 0xF0); 

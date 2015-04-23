@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=HW5.c i2c_display.c i2c_master_int.c Testlight.c spi_accel.c
+SOURCEFILES_QUOTED_IF_SPACED=HW5.c i2c_display.c i2c_master_int.c spi_accel.c Testlight.c OLED.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/HW5.o ${OBJECTDIR}/i2c_display.o ${OBJECTDIR}/i2c_master_int.o ${OBJECTDIR}/Testlight.o ${OBJECTDIR}/spi_accel.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/HW5.o.d ${OBJECTDIR}/i2c_display.o.d ${OBJECTDIR}/i2c_master_int.o.d ${OBJECTDIR}/Testlight.o.d ${OBJECTDIR}/spi_accel.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/HW5.o ${OBJECTDIR}/i2c_display.o ${OBJECTDIR}/i2c_master_int.o ${OBJECTDIR}/spi_accel.o ${OBJECTDIR}/Testlight.o ${OBJECTDIR}/OLED.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/HW5.o.d ${OBJECTDIR}/i2c_display.o.d ${OBJECTDIR}/i2c_master_int.o.d ${OBJECTDIR}/spi_accel.o.d ${OBJECTDIR}/Testlight.o.d ${OBJECTDIR}/OLED.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/HW5.o ${OBJECTDIR}/i2c_display.o ${OBJECTDIR}/i2c_master_int.o ${OBJECTDIR}/Testlight.o ${OBJECTDIR}/spi_accel.o
+OBJECTFILES=${OBJECTDIR}/HW5.o ${OBJECTDIR}/i2c_display.o ${OBJECTDIR}/i2c_master_int.o ${OBJECTDIR}/spi_accel.o ${OBJECTDIR}/Testlight.o ${OBJECTDIR}/OLED.o
 
 # Source Files
-SOURCEFILES=HW5.c i2c_display.c i2c_master_int.c Testlight.c spi_accel.c
+SOURCEFILES=HW5.c i2c_display.c i2c_master_int.c spi_accel.c Testlight.c OLED.c
 
 
 CFLAGS=
@@ -112,17 +112,23 @@ ${OBJECTDIR}/i2c_master_int.o: i2c_master_int.c  nbproject/Makefile-${CND_CONF}.
 	@${RM} ${OBJECTDIR}/i2c_master_int.o 
 	@${FIXDEPS} "${OBJECTDIR}/i2c_master_int.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/i2c_master_int.o.d" -o ${OBJECTDIR}/i2c_master_int.o i2c_master_int.c   
 	
+${OBJECTDIR}/spi_accel.o: spi_accel.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/spi_accel.o.d 
+	@${RM} ${OBJECTDIR}/spi_accel.o 
+	@${FIXDEPS} "${OBJECTDIR}/spi_accel.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/spi_accel.o.d" -o ${OBJECTDIR}/spi_accel.o spi_accel.c   
+	
 ${OBJECTDIR}/Testlight.o: Testlight.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/Testlight.o.d 
 	@${RM} ${OBJECTDIR}/Testlight.o 
 	@${FIXDEPS} "${OBJECTDIR}/Testlight.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Testlight.o.d" -o ${OBJECTDIR}/Testlight.o Testlight.c   
 	
-${OBJECTDIR}/spi_accel.o: spi_accel.c  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/OLED.o: OLED.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/spi_accel.o.d 
-	@${RM} ${OBJECTDIR}/spi_accel.o 
-	@${FIXDEPS} "${OBJECTDIR}/spi_accel.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/spi_accel.o.d" -o ${OBJECTDIR}/spi_accel.o spi_accel.c   
+	@${RM} ${OBJECTDIR}/OLED.o.d 
+	@${RM} ${OBJECTDIR}/OLED.o 
+	@${FIXDEPS} "${OBJECTDIR}/OLED.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/OLED.o.d" -o ${OBJECTDIR}/OLED.o OLED.c   
 	
 else
 ${OBJECTDIR}/HW5.o: HW5.c  nbproject/Makefile-${CND_CONF}.mk
@@ -143,17 +149,23 @@ ${OBJECTDIR}/i2c_master_int.o: i2c_master_int.c  nbproject/Makefile-${CND_CONF}.
 	@${RM} ${OBJECTDIR}/i2c_master_int.o 
 	@${FIXDEPS} "${OBJECTDIR}/i2c_master_int.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/i2c_master_int.o.d" -o ${OBJECTDIR}/i2c_master_int.o i2c_master_int.c   
 	
+${OBJECTDIR}/spi_accel.o: spi_accel.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/spi_accel.o.d 
+	@${RM} ${OBJECTDIR}/spi_accel.o 
+	@${FIXDEPS} "${OBJECTDIR}/spi_accel.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/spi_accel.o.d" -o ${OBJECTDIR}/spi_accel.o spi_accel.c   
+	
 ${OBJECTDIR}/Testlight.o: Testlight.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/Testlight.o.d 
 	@${RM} ${OBJECTDIR}/Testlight.o 
 	@${FIXDEPS} "${OBJECTDIR}/Testlight.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Testlight.o.d" -o ${OBJECTDIR}/Testlight.o Testlight.c   
 	
-${OBJECTDIR}/spi_accel.o: spi_accel.c  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/OLED.o: OLED.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/spi_accel.o.d 
-	@${RM} ${OBJECTDIR}/spi_accel.o 
-	@${FIXDEPS} "${OBJECTDIR}/spi_accel.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/spi_accel.o.d" -o ${OBJECTDIR}/spi_accel.o spi_accel.c   
+	@${RM} ${OBJECTDIR}/OLED.o.d 
+	@${RM} ${OBJECTDIR}/OLED.o 
+	@${FIXDEPS} "${OBJECTDIR}/OLED.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/OLED.o.d" -o ${OBJECTDIR}/OLED.o OLED.c   
 	
 endif
 

@@ -8,8 +8,8 @@
 #ifndef OLED_H
 #define	OLED_H
 
-void OLED_WRITE(char input);
-int SET_START(int rowstart, int colstart)
+void OLED_WRITE(int row1, int col1, unsigned char * input);
+//int SET_START(int rowstart, int colstart)
 
 #endif	/* OLED_H */
 
