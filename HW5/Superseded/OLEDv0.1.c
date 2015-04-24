@@ -110,7 +110,7 @@ void OLED_WRITE(int row1, int col1, unsigned char * input){  //Make this char *i
        int rowstart=row1;
        int colstart=col1;
        while(input[k]){
-           for(k=0;k<strlen(input);k++){ 
+           for(k=0;k<strlen(input);k++){  //Disabled to check if this works
                val=input[k];
                for(col=0;col<5;col++){
                    for(row=0;row<8;row++){
@@ -128,6 +128,14 @@ void OLED_WRITE(int row1, int col1, unsigned char * input){  //Make this char *i
                colstart+=5;
            }
            display_draw();
+       //}
     }
 }
 
+// int SET_START(int rowstart, int colstart){  //Implemented within OLED_WRITE
+    // int temp[2];
+    // temp[0] = rowstart;
+    // temp[1] = colstart;
+
+    // return (temp);
+// }
