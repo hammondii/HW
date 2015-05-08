@@ -9,6 +9,7 @@
       <itemPath>accel.h</itemPath>
       <itemPath>Testlight.h</itemPath>
       <itemPath>OLED.h</itemPath>
+      <itemPath>pic32config.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

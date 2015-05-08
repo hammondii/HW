@@ -1,5 +1,9 @@
 #include "accel.h"
 #include <xc.h>
+#include "OLED.h"
+
+#define LOADMAX 10000000
+
 
 // interface with the LSM303D accelerometer/magnetometer using spi
 // Wire GND to GND, VDD to 3.3V, 
@@ -83,3 +87,58 @@ void acc_setup() {
   acc_write_register(CTRL7, 0x0); 
 }
 
+void accel_read_print(){
+    unsigned char bufferaccel [100];
+   //Temporary Variables for Reading ACCEL
+    short accels[3]; // accelerations for the 3 axes
+    short mags[3]; // magnetometer readings for the 3 axes
+    short tempt;  // temperature
+    //int load =0;
+
+     _CP0_SET_COUNT(0); // set core timer to 0, remember it counts at half the CPU clock
+
+    // wait for half a second, setting LED brightness to pot angle while waiting
+    //i = _CP0_GET_COUNT();
+
+    while(_CP0_GET_COUNT()< LOADMAX){
+        _nop();
+    }
+    acc_read_register(OUT_X_L_A, (unsigned char *) accels, 6);
+    // need to read all 6 bytes in one transaction to get an update.
+
+    acc_read_register(OUT_X_L_M, (unsigned char *) mags, 6);
+    // read the temperature data. Its a right justified 12 bit two's compliment number
+
+    acc_read_register(TEMP_OUT_L, (unsigned char *) &tempt, 2);
+    sprintf(bufferaccel,"Values (X:%d, Y:%d, Z:%d)",accels[0],accels[1],accels[2]);
+    display_clear();
+    OLED_WRITE(12,0, (unsigned char *) bufferaccel);
+}
+
+void accel_read_snake(){
+    unsigned char bufferaccel [100];
+   //Temporary Variables for Reading ACCEL
+    short accels[3]; // accelerations for the 3 axes
+    short mags[3]; // magnetometer readings for the 3 axes
+    short tempt;  // temperature
+    //int load =0;
+
+     _CP0_SET_COUNT(0); // set core timer to 0, remember it counts at half the CPU clock
+
+    // wait for half a second, setting LED brightness to pot angle while waiting
+    //i = _CP0_GET_COUNT();
+
+    while(_CP0_GET_COUNT()< LOADMAX){
+        _nop();
+    }
+    acc_read_register(OUT_X_L_A, (unsigned char *) accels, 6);
+    // need to read all 6 bytes in one transaction to get an update.
+
+    acc_read_register(OUT_X_L_M, (unsigned char *) mags, 6);
+    // read the temperature data. Its a right justified 12 bit two's compliment number
+
+    acc_read_register(TEMP_OUT_L, (unsigned char *) &tempt, 2);
+    sprintf(bufferaccel,"%d)",accels[0]);
+    display_clear();
+    OLED_SNAKE((unsigned char *) bufferaccel);
+}

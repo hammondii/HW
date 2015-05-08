@@ -99,7 +99,13 @@ static const char ASCII[96][5] = {
 ,{0x00, 0x41, 0x36, 0x08, 0x00} // 7d }
 ,{0x10, 0x08, 0x08, 0x10, 0x08} // 7e ?
 ,{0x00, 0x06, 0x09, 0x09, 0x06} // 7f ?
+,{0xFF, 0xFF, 0xFF, 0xFF, 0xFF} // 80 White Block
 }; // end char ASCII[96][5]
+int CENTERROW = 23;
+int CENTERCOL = 58;
+int XMAX = 3000;
+int YMAX = 3000;
+ static int xprev, xstoredcol, ystoredrow, yprev;
 
 void OLED_WRITE(int row1, int col1, unsigned char * input){  //Make this char *input
 
@@ -110,7 +116,7 @@ void OLED_WRITE(int row1, int col1, unsigned char * input){  //Make this char *i
        int rowstart=row1;
        int colstart=col1;
        while(input[k]){
-           for(k=0;k<strlen(input);k++){ 
+           for(k=0;k<strlen(input);k++){  //Disabled to check if this works
                val=input[k];
                for(col=0;col<5;col++){
                    for(row=0;row<8;row++){
@@ -120,14 +126,98 @@ void OLED_WRITE(int row1, int col1, unsigned char * input){  //Make this char *i
                        display_pixel_set(row+rowstart,col+colstart,temp&1);
                        j++;
                    }
-
                    i++;
                    j=0;
                }
-               i=0;
-               colstart+=5;
+               if(colstart > 124-5){
+                   rowstart+=8;
+                   colstart =0;
+                   i=0;
+               }
+               else{
+                   i=0;
+                   colstart+=5;
+               }
            }
            display_draw();
     }
 }
 
+void OLED_SNAKE(unsigned char * xyvalues ){  //Make this char *input
+
+       int row, col, xn, yn;
+       int temp;
+       int i =0, j=0, k=0;
+       static int rowstart;  // Draws in the middle
+       static int colstart;
+       int xscale = 4;
+       int yscale = 12;
+       int xvalue = ((int) ((float) ((float)xyvalues[0])/XMAX) * xscale);
+       int yvalue = xyvalues[1]/yscale;
+       int loading =1;
+
+       /*
+        //Makes the center block  This section not working.
+//       for(col=0;col<5;col++){
+//                   for(row=0;row<8;row++){
+//                       display_pixel_set(row+rowstart,col+colstart,1);
+//                       j++;
+////                       storedcol = col+colstart;
+//                   }
+//                   i++;
+//                   j=0;
+//       }
+
+
+//       while(something is true){
+//
+//       }
+//
+*/
+
+     //  This is my copy  from section
+     //  while(){
+        //   for(k=0;k<;k++){
+       while(loading){
+           for(col=0;col<5;col++){  //This builds the builds center block
+               for(row=0;row<8;row++){
+
+                   display_pixel_set(row+CENTERROW,col+CENTERCOL,1);
+                   j++;
+               }
+               i++;
+               j=0;
+           }
+           display_draw();
+           loading=0;
+       }
+       k=0;
+       while(loading){
+           if(xvalue>0){
+               for(col=0;col<5;col++){  //This builds the base X direction
+                   for(row=0;row<8;row++){
+                       display_pixel_set(row+CENTERROW,col+xstoredcol,1);
+                       j++;
+                       k++;
+                   }
+                   i++;
+                   j=0;
+               }
+           if(k=xvalue){
+               xstoredcol+=xvalue;
+               loading=0;
+           }
+           else display_draw();
+           
+         }
+       }
+//       else if(xvalue<0){
+//
+//       }
+//       }
+//       //Increase in X direction
+//       loading =1;
+//       while(){
+//       ;
+//       }
+}

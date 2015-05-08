@@ -22,5 +22,11 @@ void acc_read_register(unsigned char reg, unsigned char data[], unsigned int len
 void acc_write_register(unsigned char reg, unsigned char data);                    
 
 // initialize the accelerometer
-void acc_setup();                                                                  
+void acc_setup();
+
+// this will print to OLED the values the acceleration data on the accelerometer
+void accel_read_print();
+void accel_read_snake();
 #endif
+
+
