@@ -88,7 +88,8 @@ void acc_setup() {
 }
 
 void accel_read_print(){
-    unsigned char bufferaccel [100];
+    static unsigned char bufferaccel [100];
+    //char *pbufferaccel = &bufferaccel;
    //Temporary Variables for Reading ACCEL
     short accels[3]; // accelerations for the 3 axes
     short mags[3]; // magnetometer readings for the 3 axes
@@ -96,9 +97,6 @@ void accel_read_print(){
     //int load =0;
 
      _CP0_SET_COUNT(0); // set core timer to 0, remember it counts at half the CPU clock
-
-    // wait for half a second, setting LED brightness to pot angle while waiting
-    //i = _CP0_GET_COUNT();
 
     while(_CP0_GET_COUNT()< LOADMAX){
         _nop();
@@ -112,11 +110,13 @@ void accel_read_print(){
     acc_read_register(TEMP_OUT_L, (unsigned char *) &tempt, 2);
     sprintf(bufferaccel,"Values (X:%d, Y:%d, Z:%d)",accels[0],accels[1],accels[2]);
     display_clear();
-    OLED_WRITE(12,0, (unsigned char *) bufferaccel);
+    OLED_WRITE(0,0, bufferaccel);
+//    OLED_WRITE(0,0, (unsigned char *) bufferaccel);
 }
 
 void accel_read_snake(){
-    unsigned char bufferaccel [100];
+   static unsigned char accsnake [100];
+   //char *pbuffaccsnake = buffaccsnake;
    //Temporary Variables for Reading ACCEL
     short accels[3]; // accelerations for the 3 axes
     short mags[3]; // magnetometer readings for the 3 axes
@@ -124,9 +124,6 @@ void accel_read_snake(){
     //int load =0;
 
      _CP0_SET_COUNT(0); // set core timer to 0, remember it counts at half the CPU clock
-
-    // wait for half a second, setting LED brightness to pot angle while waiting
-    //i = _CP0_GET_COUNT();
 
     while(_CP0_GET_COUNT()< LOADMAX){
         _nop();
@@ -138,7 +135,6 @@ void accel_read_snake(){
     // read the temperature data. Its a right justified 12 bit two's compliment number
 
     acc_read_register(TEMP_OUT_L, (unsigned char *) &tempt, 2);
-    sprintf(bufferaccel,"%d)",accels[0]);
-    display_clear();
-    OLED_SNAKE((unsigned char *) bufferaccel);
+    OLED_SNAKE(accels);
+    
 }

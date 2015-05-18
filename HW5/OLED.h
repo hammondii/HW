@@ -9,7 +9,7 @@
 #define	OLED_H
 
 void OLED_WRITE(int row1, int col1, unsigned char * input);
-void OLED_SNAKE(unsigned char * xyvalues );
+void OLED_SNAKE(short * xyvalues );
 //int SET_START(int rowstart, int colstart)
 
 #endif	/* OLED_H */

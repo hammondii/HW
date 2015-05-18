@@ -63,7 +63,7 @@ void light_init(void){
     // set up USER pin as input
 
     ANSELBbits.ANSB13 =0;
-    TRISBbits.TRISB13 = 0b0001; // set pin B15 to Digital Input User Button
+    TRISBbits.TRISB13 = 0b0001; // set pin B13 to Digital Input User Button
 
     // set up LED1 pin as a digital output
     LATBbits.LATB7= 1;

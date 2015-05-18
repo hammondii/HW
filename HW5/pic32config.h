@@ -48,8 +48,8 @@ extern "C" {
     #pragma config USERID = 0 // some 16bit userid
     #pragma config PMDL1WAY = ON // not multiple reconfiguration, check this
     #pragma config IOL1WAY = ON // not multimple reconfiguration, check this
-    #pragma config FUSBIDIO = ON // USB pins controlled by USB module
-    #pragma config FVBUSONIO = ON // controlled by USB module
+    #pragma config FUSBIDIO = OFF // USB pins controlled by USB module
+    #pragma config FVBUSONIO = OFF // controlled by USB module
 
 
 

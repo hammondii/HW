@@ -1,8 +1,9 @@
 #include "OLED.h"
 #include "i2c_display.h"
 #include <stdio.h>
+#include <xc.h>
 
-static const char ASCII[96][5] = {
+static const char ASCII[97][5] = {
  {0x00, 0x00, 0x00, 0x00, 0x00} // 20  (space)
 ,{0x00, 0x00, 0x5f, 0x00, 0x00} // 21 !
 ,{0x00, 0x07, 0x00, 0x07, 0x00} // 22 "
@@ -101,11 +102,18 @@ static const char ASCII[96][5] = {
 ,{0x00, 0x06, 0x09, 0x09, 0x06} // 7f ?
 ,{0xFF, 0xFF, 0xFF, 0xFF, 0xFF} // 80 White Block
 }; // end char ASCII[96][5]
-int CENTERROW = 23;
-int CENTERCOL = 58;
-int XMAX = 3000;
-int YMAX = 3000;
- static int xprev, xstoredcol, ystoredrow, yprev;
+static int CENTERROW = 23;
+static int CENTERCOL = 58;
+static int XMAX = 18000;
+//static int XMAX = 16000;
+static int YMAX = 10000;
+//static int YMAX = 16000;
+static int XSCALE = 61;
+static int YSCALE = 28;
+volatile int XPREV = 58;
+volatile int XSTOREDCOL =58;
+volatile int YPREV = 23;
+volatile int YSTOREDROW =23;
 
 void OLED_WRITE(int row1, int col1, unsigned char * input){  //Make this char *input
 
@@ -143,81 +151,111 @@ void OLED_WRITE(int row1, int col1, unsigned char * input){  //Make this char *i
     }
 }
 
-void OLED_SNAKE(unsigned char * xyvalues ){  //Make this char *input
+void OLED_SNAKE(short * xyvalues ){  //Make this char *input
 
-       int row, col, xn, yn;
-       int temp;
-       int i =0, j=0, k=0;
-       static int rowstart;  // Draws in the middle
-       static int colstart;
-       int xscale = 4;
-       int yscale = 12;
-       int xvalue = ((int) ((float) ((float)xyvalues[0])/XMAX) * xscale);
-       int yvalue = xyvalues[1]/yscale;
-       int loading =1;
+    static char snake[100]; 
+    //char *pbuffsnake =buffsnake;
+    int row, col;
+    int temp;
+    int i =0, j=0, k=0;
+    int xvalue =  (((float) (xyvalues[0] * XSCALE))/((float)XMAX));
+    int yvalue = (((float) (xyvalues[0] * YSCALE))/((float)YMAX));
+   if(xvalue >0) temp = 1;
+   else if(xvalue<0) temp =2;
+   else temp =0;
 
-       /*
-        //Makes the center block  This section not working.
-//       for(col=0;col<5;col++){
-//                   for(row=0;row<8;row++){
-//                       display_pixel_set(row+rowstart,col+colstart,1);
-//                       j++;
-////                       storedcol = col+colstart;
-//                   }
-//                   i++;
-//                   j=0;
-//       }
+   //Debugging Section
+   //sprintf(snake,"%d(xvaule):%d(xyvalue)",xvalue,xyvalues[0]);
+   //OLED_WRITE(40,0,buffsnake);
+   //OLED_WRITE(40,0, snake);
 
-
-//       while(something is true){
-//
-//       }
-//
-*/
-
-     //  This is my copy  from section
-     //  while(){
-        //   for(k=0;k<;k++){
-       while(loading){
-           for(col=0;col<5;col++){  //This builds the builds center block
-               for(row=0;row<8;row++){
-
-                   display_pixel_set(row+CENTERROW,col+CENTERCOL,1);
-                   j++;
-               }
-               i++;
-               j=0;
-           }
-           display_draw();
-           loading=0;
+      //This builds the builds center block
+   for(col=0;col<5;col++){
+       for(row=0;row<8;row++){
+           display_pixel_set(row+CENTERROW,col+CENTERCOL,1);
        }
-       k=0;
-       while(loading){
-           if(xvalue>0){
-               for(col=0;col<5;col++){  //This builds the base X direction
-                   for(row=0;row<8;row++){
-                       display_pixel_set(row+CENTERROW,col+xstoredcol,1);
-                       j++;
-                       k++;
+
+   }
+   display_draw();
+
+//
+////       for (k=0; k<xvalue;k++){
+////           if(xvalue>0){
+////               for(col=0;col<6;col++){  //This builds the base X direction
+////                   for(row=0;row<8;row++){
+////                       display_pixel_set(row+CENTERROW,col+XSTOREDCOL,1);
+////                   }
+////                   display_draw();
+////               }
+////               XSTOREDCOL++;
+////            }
+////
+////           else if(xvalue<0){
+////               for(col=0;col<6;col++){  //This builds the base X direction
+////                       for(row=0;row<8;row++){
+////                           display_pixel_set(row+CENTERROW,XSTOREDCOL-col,1);
+////                       }
+////                       display_draw();
+////                       i++;
+////                       j=0;
+////                }
+////                XSTOREDCOL = CENTERCOL- xvalue;
+////                           }
+////       }
+   switch(temp){
+
+       case 1:{
+           for(k=0;k<xvalue;k++){
+
+                   for(col=0;col<6;col++){
+                       for(row=0;row<8;row++){
+                           display_pixel_set(row+CENTERROW,col+XPREV+6,1);
+                           j++;
+                       }
+                       //display_draw();
                    }
-                   i++;
-                   j=0;
+//                       if(XPREV > 61){
+//                           CENTERROW++;
+//                           XPREV =0;
+//                           i=0;
+//                       }
+//                       else{
+                       i=0;
+                       XPREV+=1;
+//                       }
                }
-           if(k=xvalue){
-               xstoredcol+=xvalue;
-               loading=0;
-           }
-           else display_draw();
-           
-         }
+           display_draw();
+           XPREV = CENTERCOL;
+           break;
        }
-//       else if(xvalue<0){
-//
-//       }
-//       }
-//       //Increase in X direction
-//       loading =1;
-//       while(){
-//       ;
-//       }
+       case 2:{
+           for(k=0;k>xvalue;k--){
+
+                   for(col=0;col<6;col++){
+                       for(row=0;row<8;row++){
+                           display_pixel_set(row+CENTERROW,XPREV-6-col,1);
+                           j++;
+                       }
+                       display_draw();
+                   }
+//                       if(XPREV = 0){
+//                           CENTERROW++;
+//                           XPREV =0;
+//                           i=0;
+//                       }
+//                       else{
+                       i=0;
+                       XPREV-=1;
+//                       }
+               }
+           break;
+       }
+
+       default:
+           OLED_WRITE(0,0,"No X value");
+
+   }
+XPREV = CENTERCOL;
+
 }
+

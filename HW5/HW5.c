@@ -1,8 +1,12 @@
 /*
- * File:   HW4.c
+ * File:   HW5.c
  * Author: Paul
  *
  * Created on April 12, 2015, 5:37 PM
+ *
+ * Current State May 9, 2015
+ * The OLED_Write function when doing sprintf will return what's in
+ * accel_read_print() in the accel_snake() function.
  */
 
 #include <p32xxxx.h>
@@ -53,11 +57,11 @@ int main(void) {
 
     __builtin_enable_interrupts();
 
-    _CP0_SET_COUNT(0); // set core timer to 0, remember it counts at half the CPU clock
-    while (_CP0_GET_COUNT() < WAIT) _nop();
+//    _CP0_SET_COUNT(0); // set core timer to 0, remember it counts at half the CPU clock
+//    while (_CP0_GET_COUNT() < WAIT) _nop();
 
     light_init();
-    display_init();	
+    display_init();
     acc_setup();
 
     while (1) {
