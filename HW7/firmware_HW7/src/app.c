@@ -54,16 +54,18 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 #include "app.h"
+#include "app.h"
 #include "OLED.h"
 #include "accel.h"
 
 
-static int XMAX = 18000;
+static int XMAX = 32000;
 //static int XMAX = 16000;
-static int YMAX = 18000;
+static int YMAX = 32000;
 //static int YMAX = 16000;
-static int XSCALE = 4;
-static int YSCALE = 4;
+static int XSCALE = 3;
+static int YSCALE = 3;
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -356,11 +358,9 @@ void APP_Tasks ( void )
     static uint8_t  movement_length = 0;
     static bool     sent_dont_move = false;
 
-    int8_t dir_table[] ={-1,-1,-1, 0, 1, 1, 1, 0};
-//    int8_t dir_table[] ={-4,-4,-4, 0, 4, 4, 4, 0};
+    int8_t dir_table[] ={-4,-4,-4, 0, 4, 4, 4, 0};
 	
     /* Check the application's current state. */
-//    OLED_WRITE(0,0,"OLED Works");
     switch ( appData.state )
     {
         /* Application's initial state. */
@@ -418,29 +418,23 @@ void APP_Tasks ( void )
 
                 if(movement_length > 50)
                 {
-                    /*Test: Verifying Accel Values and read*/
-//                    accel_read_print();
                     appData.mouseButton[0] = MOUSE_BUTTON_STATE_RELEASED;
                     appData.mouseButton[1] = MOUSE_BUTTON_STATE_RELEASED;
-                    /*ORIGINAL SETTINGS*/
-//                    appData.xCoordinate =(int8_t)dir_table[vector & 0x07] ;
-//                    appData.yCoordinate =(int8_t)dir_table[(vector+2) & 0x07];
 
                     /*NEW: Using accelorameter to get x y values*/
-//                    char buffer[100];
+                    char buffer[100];
                     short accels[3]; // accelerations for the 3 axes
                     acc_read_register(OUT_X_L_A, (unsigned char *) accels, 6);
                     int xvalue =  (((float)( accels[0] * XSCALE))/((float)XMAX));
-                    int yvalue = (((float)( accels[0] * XSCALE))/((float)XMAX));
+                    int yvalue = (((float)( accels[1] * YSCALE))/((float)YMAX));
                     appData.xCoordinate =(int8_t) xvalue;
                     appData.yCoordinate =(int8_t) yvalue;
                     BSP_LEDOn ( APP_USB_LED_1 );
-//                    sprintf(buffer,"x:%d y%d", xvalue, yvalue);
-//                    BSP_LEDOn ( APP_USB_LED_1 );
-//                    OLED_WRITE(24,0,buffer);
+//                    appData.xCoordinate =(int8_t)dir_table[vector & 0x07] ;
+//                    appData.yCoordinate =(int8_t)dir_table[(vector+2) & 0x07];
+//                    sprintf();
                     vector ++;
                     movement_length = 0;
-//                    BSP_LEDOn ( APP_USB_LED_1 );
                 }
             }
             else
